@@ -43,7 +43,7 @@ function Seo({ description, lang, meta, title }) {
   return (
     <Location>
       {({ location }) => {
-        const {origin, href} = location
+        const { origin, href } = location
         const image = `${origin}${imagePath}`
         console.log(origin, href, image)
         return (
@@ -91,9 +91,9 @@ function Seo({ description, lang, meta, title }) {
                 content: image,
               },
               {
-                name: 'twitter:url',
-                content: href
-              }]
+                name: "twitter:url",
+                content: href,
+              },
             ].concat(meta)}
           />
         )
