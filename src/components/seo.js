@@ -45,7 +45,7 @@ function Seo({ description, lang, meta, title }) {
       {({ location }) => {
         const {origin, href} = location
         const image = `${origin}${imagePath}`
-        console.log(origin, href)
+        console.log(origin, href, image)
         return (
           <Helmet
             htmlAttributes={{
