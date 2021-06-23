@@ -9,9 +9,10 @@ import * as React from "react"
 import PropTypes from "prop-types"
 import { Helmet } from "react-helmet"
 import { useStaticQuery, graphql } from "gatsby"
+import { Location } from "@reach/router"
 
 function Seo({ description, lang, meta, title }) {
-  const { site } = useStaticQuery(
+  const { site, allImageSharp } = useStaticQuery(
     graphql`
       query {
         site {
@@ -21,55 +22,79 @@ function Seo({ description, lang, meta, title }) {
             author
           }
         }
+        allImageSharp {
+          edges {
+            node {
+              id
+              fixed(quality: 6, width: 600, height: 300) {
+                src
+              }
+            }
+          }
+        }
       }
     `
   )
 
+  const imagePath = allImageSharp.edges[2].node.fixed.src
   const metaDescription = description || site.siteMetadata.description
   const defaultTitle = site.siteMetadata?.title
 
   return (
-    <Helmet
-      htmlAttributes={{
-        lang,
+    <Location>
+      {({ location }) => {
+        const origin = location.origin
+        const image = `${origin}${imagePath}`
+
+        return (
+          <Helmet
+            htmlAttributes={{
+              lang,
+            }}
+            title={title}
+            titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
+            meta={[
+              {
+                name: `description`,
+                content: metaDescription,
+              },
+              {
+                property: `og:title`,
+                content: title,
+              },
+              {
+                property: `og:description`,
+                content: metaDescription,
+              },
+              {
+                property: `og:type`,
+                content: `website`,
+              },
+              {
+                name: `twitter:card`,
+                content: `summary_large_image`,
+              },
+              {
+                name: `twitter:creator`,
+                content: site.siteMetadata?.author || ``,
+              },
+              {
+                name: `twitter:title`,
+                content: title,
+              },
+              {
+                name: `twitter:description`,
+                content: metaDescription,
+              },
+              {
+                name: "twitter:card",
+                content: image,
+              },
+            ].concat(meta)}
+          />
+        )
       }}
-      title={title}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
-      meta={[
-        {
-          name: `description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:title`,
-          content: title,
-        },
-        {
-          property: `og:description`,
-          content: metaDescription,
-        },
-        {
-          property: `og:type`,
-          content: `website`,
-        },
-        {
-          name: `twitter:card`,
-          content: `summary`,
-        },
-        {
-          name: `twitter:creator`,
-          content: site.siteMetadata?.author || ``,
-        },
-        {
-          name: `twitter:title`,
-          content: title,
-        },
-        {
-          name: `twitter:description`,
-          content: metaDescription,
-        },
-      ].concat(meta)}
-    />
+    </Location>
   )
 }
 
