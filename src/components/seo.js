@@ -43,9 +43,9 @@ function Seo({ description, lang, meta, title }) {
   return (
     <Location>
       {({ location }) => {
-        const origin = location.origin
+        const {origin, href} = location
         const image = `${origin}${imagePath}`
-
+        console.log(origin, href)
         return (
           <Helmet
             htmlAttributes={{
@@ -90,6 +90,10 @@ function Seo({ description, lang, meta, title }) {
                 name: "twitter:image",
                 content: image,
               },
+              {
+                name: 'twitter:url',
+                content: href
+              }]
             ].concat(meta)}
           />
         )
