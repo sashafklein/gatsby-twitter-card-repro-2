@@ -87,7 +87,7 @@ function Seo({ description, lang, meta, title }) {
                 content: metaDescription,
               },
               {
-                name: "twitter:card",
+                name: "twitter:image",
                 content: image,
               },
             ].concat(meta)}
